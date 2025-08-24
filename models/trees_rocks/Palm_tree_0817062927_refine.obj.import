@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bj46ohwrwea3i"
+path="res://.godot/imported/Palm_tree_0817062927_refine.obj-865ec8b5a5a044860898f2e86a13e9b1.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Palm_tree_0817062927_refine.obj-865ec8b5a5a044860898f2e86a13e9b1.mesh"]
+
+source_file="res://models/trees_rocks/Palm_tree_0817062927_refine.obj"
+dest_files=["res://.godot/imported/Palm_tree_0817062927_refine.obj-865ec8b5a5a044860898f2e86a13e9b1.mesh", "res://.godot/imported/Palm_tree_0817062927_refine.obj-865ec8b5a5a044860898f2e86a13e9b1.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://SlopedBeach.gd" id="1"]
+
+[node name="SlopedBeach" type="Node3D"]
+script = ExtResource("1")
+length_m = 50.0
+width_m = 20.0
+plateau_width_m = 8.0
+berm_radius_m = 2.0
+slope_angle_deg = 45.0
+water_height = -0.2
+wet_band_m = 1.0
+edge_drop_cm = 3
+lod_quality = "Medium:16"
+cast_shadows = false
+enable_curve_noise = false
+curve_noise_amplitude = 0.1
+curve_noise_frequency = 2.0

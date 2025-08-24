@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://db8ke0s8fx6fw"
+path="res://.godot/imported/house_type15.obj-b11bf2d01e9d0f5c73c65367f7a5187d.mesh"
+
+[deps]
+
+files=["res://.godot/imported/house_type15.obj-b11bf2d01e9d0f5c73c65367f7a5187d.mesh"]
+
+source_file="res://models/houses/house_type15.obj"
+dest_files=["res://.godot/imported/house_type15.obj-b11bf2d01e9d0f5c73c65367f7a5187d.mesh", "res://.godot/imported/house_type15.obj-b11bf2d01e9d0f5c73c65367f7a5187d.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

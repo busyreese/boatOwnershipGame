@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dpbv1qc225h18"
+path="res://.godot/imported/driveway_long.obj-db16f8fa4170128aacfa295c1403cf99.mesh"
+
+[deps]
+
+files=["res://.godot/imported/driveway_long.obj-db16f8fa4170128aacfa295c1403cf99.mesh"]
+
+source_file="res://models/houses/driveway_long.obj"
+dest_files=["res://.godot/imported/driveway_long.obj-db16f8fa4170128aacfa295c1403cf99.mesh", "res://.godot/imported/driveway_long.obj-db16f8fa4170128aacfa295c1403cf99.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

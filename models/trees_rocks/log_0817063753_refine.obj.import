@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dbcytelws8kw8"
+path="res://.godot/imported/log_0817063753_refine.obj-14bcdd2d8206bd84fccfd60b6bac90ac.mesh"
+
+[deps]
+
+files=["res://.godot/imported/log_0817063753_refine.obj-14bcdd2d8206bd84fccfd60b6bac90ac.mesh"]
+
+source_file="res://models/trees_rocks/log_0817063753_refine.obj"
+dest_files=["res://.godot/imported/log_0817063753_refine.obj-14bcdd2d8206bd84fccfd60b6bac90ac.mesh", "res://.godot/imported/log_0817063753_refine.obj-14bcdd2d8206bd84fccfd60b6bac90ac.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

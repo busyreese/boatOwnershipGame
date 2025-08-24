@@ -1,0 +1,89 @@
+[gd_scene load_steps=2 format=3 uid="uid://cb4wutngvi75i"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_1i6ty"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1i6ty")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.219608, 0.54902, 0.65098, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_right = 4.0
+offset_bottom = 425.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="MoneyLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Money:£100
+"
+
+[node name="DayLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Day:1"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="BoatConditionLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Boat Condition: 50%
+"
+
+[node name="ConditionBar" type="ProgressBar" parent="VBoxContainer"]
+layout_mode = 2
+value = 50.0
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="CruiseButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "🚤 Take Cruise ($20+)"
+
+[node name="WorkButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "🔧 Work on Boat (5s)"
+
+[node name="ShopButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "⚓ Upgrade Shop
+"
+
+[node name="MooringButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "⚓ Buy Monthly Mooring ($500)"
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer"]
+modulate = Color(0.254902, 0.686275, 0.34902, 1)
+layout_mode = 2
+text = "Ready  to sail!
+"
+
+[node name="BrokerageButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "⛵ Ship Brokerage
+"
