@@ -1,4 +1,16 @@
+# ─────────────────────────────────────────────────────────────
+# COMPONENT: Environment 3D
 # ARTIFACT-ID: b8e5d4f2-environment-beach
+# VERSION: 0.1.1
+# OWNERSHIP: boatsimgame-prompter
+# PURPOSE: Handles 3D environment with sloped beach
+# DEPENDS-ON: SlopedBeach.gd, WaterPhysics.gd
+# CHANGELOG:
+#   - 2025-01-15 0.1.1 Fixed house floating - added ground alignment
+#   - 2025-01-14 0.1.0 Initial beach environment
+# SAFETY-NOTE: Do not repurpose this artifact for unrelated features.
+# ─────────────────────────────────────────────────────────────
+
 # Environment3D.gd - Handles 3D environment with sloped beach
 extends Node3D
 
@@ -110,6 +122,16 @@ func setup_beach():
 	# Position beach in the middle of the screen, below houses
 	beach.position = Vector3(0, 0.5, -5)  # Moved to center of view
 	add_child(beach)
+	
+		# Add collision body for ground detection
+	var beach_collision = StaticBody3D.new()
+	beach_collision.collision_layer = 1
+	var collision_shape = CollisionShape3D.new()
+	var box_shape = BoxShape3D.new()
+	box_shape.size = Vector3(100, 2, 100)
+	collision_shape.shape = box_shape
+	beach_collision.add_child(collision_shape)
+	beach.add_child(beach_collision)
 
 func setup_ocean(physics: Node):
 	water_physics = physics
@@ -141,66 +163,65 @@ func setup_ocean(physics: Node):
 		# Parameters
 		ocean_material.set_shader_parameter("time_factor", 3.0)
 		ocean_material.set_shader_parameter("noise_zoom", 1.5)
-		ocean_material.set_shader_parameter("noise_amp", 0.2)
-		ocean_material.set_shader_parameter("metallic", 0.5)
-		ocean_material.set_shader_parameter("roughness", 0.08)
-		ocean_material.set_shader_parameter("normal_strength", 0.3)
-		ocean_material.set_shader_parameter("peak_height_threshold", 0.4)
-		ocean_material.set_shader_parameter("peak_intensity", 0.3)
-		ocean_material.set_shader_parameter("foam_intensity", 0.2)
-		ocean_material.set_shader_parameter("foam_scale", 1.0)
-		ocean_material.set_shader_parameter("edge_foam_intensity", 0.3)
-		ocean_material.set_shader_parameter("beers_law", 0.8)
-		ocean_material.set_shader_parameter("depth_offset", -0.75)
-		ocean_material.set_shader_parameter("near", 0.5)
-		ocean_material.set_shader_parameter("far", 1000.0)
-		
-		water_plane.set_surface_override_material(0, ocean_material)
-	else:
-		print("Warning: Could not load ocean shader")
-		var fallback_material = StandardMaterial3D.new()
-		fallback_material.albedo_color = Color(0.169, 0.373, 0.529, 0.95)
-		fallback_material.metallic = 0.3
-		fallback_material.roughness = 0.1
-		fallback_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		water_plane.set_surface_override_material(0, fallback_material)
+		ocean_material.set_shader_parameter("fresnel_strength", 0.4)
+		ocean_material.set_shader_parameter("wave_strength", 0.3)
+		ocean_material.set_shader_parameter("wave_scale", Vector2(5.0, 5.0))
+		ocean_material.set_shader_parameter("wave_speed", 0.5)
 	
+	water_plane.set_surface_override_material(0, ocean_material)
 	water_plane.position = Vector3(0, -0.2, 0)
 	add_child(water_plane)
-	water_plane.add_to_group("WaterSurface")
 
+
+ 
 func setup_underwater_life():
+		# Wrapper function for compatibility with Main.gd
+		# Main.gd calls this, but we renamed it to setup_underwater_world
+	setup_underwater_world()
+
+
+
+
+func setup_underwater_world():
+	# Create underwater container
 	underwater_container = Node3D.new()
-	underwater_container.name = "UnderwaterLife"
+	underwater_container.name = "UnderwaterWorld"
 	add_child(underwater_container)
 	
-	# Fish schools - in the water beyond the beach
+	# Create fish schools
 	for i in range(3):
-		create_fish_school(
-			Vector3(randf_range(-20, 20), randf_range(-3, -1), randf_range(5, 20)),
-			randi_range(5, 10)
+		var pos = Vector3(
+			randf_range(-20, 20),
+			randf_range(-5, -2),
+			randf_range(-10, 20)
 		)
+		create_fish_school(pos)
 	
-	# Jellyfish - floating in deeper water
-	for i in range(2):
-		create_jellyfish(
-			Vector3(randf_range(-15, 15), randf_range(-4, -2), randf_range(8, 18))
+	# Create jellyfish
+	for i in range(5):
+		var pos = Vector3(
+			randf_range(-15, 15),
+			randf_range(-8, -3),
+			randf_range(-5, 15)
 		)
+		create_jellyfish(pos)
 	
-	# Seaweed at the water edge along the beach slope
-	for i in range(6):
-		create_seaweed(Vector3(randf_range(-15, 15), -2.5, randf_range(2, 6)))
+	# Create seaweed patches
+	for i in range(12):
+		var pos = Vector3(
+			randf_range(-25, 25),
+			-10,  # Ocean floor
+			randf_range(-15, 25)
+		)
+		create_seaweed(pos)
 
-func create_fish_school(position: Vector3, count: int):
+func create_fish_school(position: Vector3):
 	var school = Node3D.new()
 	school.position = position
-	school.name = "FishSchool"
 	
-	for i in range(count):
+	for i in range(8):
 		var fish = MeshInstance3D.new()
 		var fish_mesh = SphereMesh.new()
-		fish_mesh.radial_segments = 8
-		fish_mesh.rings = 4
 		fish_mesh.radius = 0.15
 		fish_mesh.height = 0.4
 		fish.mesh = fish_mesh
@@ -315,16 +336,34 @@ func setup_coastal_town():
 		if not house_instance:
 			continue
 		
-		# Position on plateau - houses along X axis, on beach plateau
+		# Initial position high for raycast
 		var x_pos = house_x_start + i * house_x_spacing
 		var z_pos = -10.0  # On the beach plateau (back from water)
 		
-		house_instance.position = Vector3(x_pos, 0.75, z_pos)
-		house_instance.rotation_degrees.y = randf_range(-15, 15)  # Slight random rotation
+		# Start high for ground detection
+		house_instance.position = Vector3(x_pos, 10.0, z_pos)
 		house_instance.scale = Vector3(0.8, 0.8, 0.8)
 		
-		disable_shadows(house_instance)
 		beach_houses.add_child(house_instance)
+		
+		# Perform ground alignment after adding to scene (only if in tree)
+		if is_inside_tree():
+			await get_tree().process_frame
+			align_to_ground(house_instance)
+		# If not in tree yet, alignment will happen without await
+		
+		# Face toward ocean with slight variation
+		var ocean_direction = Vector3(0, 0, 1)  # Toward positive Z (ocean)
+		var look_target = house_instance.global_position + ocean_direction * 10
+		look_target.y = house_instance.global_position.y  # Keep same height
+		house_instance.look_at(look_target, Vector3.UP)
+		house_instance.rotation_degrees.y += randf_range(-15, 15)  # Add variation
+		
+		disable_shadows(house_instance)
+	
+	# Let houses settle (only if in tree)
+	if is_inside_tree():
+		await get_tree().process_frame
 	
 	# Add palm trees and rocks
 	if not available_decorations.is_empty():
@@ -338,14 +377,53 @@ func setup_coastal_town():
 					var x = randf_range(-BEACH_LENGTH/2 + 2, BEACH_LENGTH/2 - 2)
 					var z = randf_range(-12, -6)  # On plateau and upper slope
 					
-					deco_instance.position = Vector3(x, 0.5, z)
-					deco_instance.rotation_degrees.y = randf_range(0, 360)
+					# Start high for ground detection
+					deco_instance.position = Vector3(x, 10.0, z)
 					
 					var scale = 0.5 if deco_path.contains("Palm") else 0.3
 					deco_instance.scale = Vector3(scale, scale, scale)
 					
-					disable_shadows(deco_instance)
 					beach_houses.add_child(deco_instance)
+					
+					# Align to ground after adding to scene (only if in tree)
+					if is_inside_tree():
+						await get_tree().process_frame
+						align_to_ground(deco_instance)
+					
+					deco_instance.rotation_degrees.y = randf_range(0, 360)
+					disable_shadows(deco_instance)
+
+func align_to_ground(node: Node3D):
+	# Cast ray down to find ground
+	var space_state = get_world_3d().direct_space_state
+	var from = node.global_position
+	var to = node.global_position - Vector3(0, 100, 0)
+	
+	var query = PhysicsRayQueryParameters3D.create(from, to)
+	query.collision_mask = 1  # Assuming ground is on layer 1
+	query.exclude = [node]
+	
+	var result = space_state.intersect_ray(query)
+	
+	if not result.is_empty():
+		# Place object on ground with small offset
+		var ground_pos = result.position
+		node.global_position = ground_pos + Vector3(0, 0.1, 0)  # Small offset to prevent z-fighting
+		
+		# Optional: Align to surface normal for natural placement
+		if result.has("normal"):
+			var normal = result.normal
+			# Only apply slight tilt for realism, not full alignment
+			if normal.y > 0.7:  # Mostly flat surfaces
+				var tilt_factor = 0.1  # How much to tilt based on terrain
+				node.rotation.x = atan2(normal.z, normal.y) * tilt_factor
+				node.rotation.z = atan2(-normal.x, normal.y) * tilt_factor
+	else:
+		# Fallback if no ground detected - use estimated heights
+		if node.global_position.z < -8:  # On plateau
+			node.global_position.y = 0.8
+		else:  # Near water
+			node.global_position.y = 0.5
 
 func create_simple_beach_houses():
 	# Fallback: Create simple box houses along X axis

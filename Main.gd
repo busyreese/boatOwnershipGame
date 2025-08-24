@@ -23,7 +23,12 @@ func _ready():
 	add_child(camera_controller)
 	
 	# Setup environment
-	var EnvironmentScript = preload("res://Environment3D.gd")
+		# Check if the file exists and load it properly
+	var env_script_path = "res://Environment3D.gd"
+	if not ResourceLoader.exists(env_script_path):
+		push_error("Environment3D.gd not found at: " + env_script_path)
+		return
+	var EnvironmentScript = load(env_script_path)
 	environment_3d = EnvironmentScript.new()
 	environment_3d.setup_environment(camera_controller)
 	environment_3d.setup_ocean(water_physics)
@@ -166,12 +171,10 @@ func _on_boat_changed(_boat_name):
 func _on_time_tick(hour: int, minute: int):
 	ui_manager.update_time(hour, minute)
 
-func _on_cruise_started():
-	var route_name = ""
-	for r_name in GameManager.cruise_routes:
-		if GameManager.cruise_routes[r_name] == GameManager.current_cruise_route:
-			route_name = r_name
-			break
+func _on_cruise_started(route_name: String = ""):
+	# If route_name not provided, try to get it from GameManager
+	if route_name == "" and GameManager.current_cruise_route:
+		route_name = "Standard Route"  # Default fallback
 	
 	if route_name == "":
 		route_name = "Standard Route"
@@ -182,9 +185,12 @@ func _on_cruise_started():
 func _on_cruise_completed():
 	boat_manager.end_cruise()
 	ui_manager.update_ui()
-
+	
 func _on_rental_started(_boat_name):
 	boat_manager.update_boat_display()
+	ui_manager.update_ui()
+
+
 
 func _on_rental_ended(_boat_name):
 	boat_manager.update_boat_display()

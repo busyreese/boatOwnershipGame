@@ -8,7 +8,7 @@ signal day_passed
 signal work_completed
 signal upgrade_purchased(upgrade_name)
 signal time_tick(hour, minute)
-signal cruise_started
+signal cruise_started(route_name)
 signal cruise_completed
 signal rental_started(boat_name)
 signal rental_ended(boat_name)
@@ -800,7 +800,7 @@ func start_cruise_with_route(route_name: String):
 	is_cruising = true
 	cruise_timer = get_cruise_duration(route_name)
 	cruise_total_time = cruise_timer
-	cruise_started.emit()
+	cruise_started.emit(route_name)
 	return 0.0
 
 func hire_mechanic() -> bool:
